@@ -58,5 +58,5 @@ gulp.task('clear', function (done) {
               width: width,
               height: height
           }))
-      .pipe(gulp.dest('dest/resized'));
+      .pipe(gulp.dest('dist/resized'));
   });
