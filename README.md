@@ -7,7 +7,7 @@ What can it do:
 
 # Install
 
-1. Clone this little peace of chaos on your project folder;
+1. Clone this little piece of chaos on your project folder;
 2. Type "npm install" in the command line;
 3. Open gulpfile.js and change variables in its command line section;
 4. Enjoy!
