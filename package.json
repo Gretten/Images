@@ -1,0 +1,16 @@
+{
+  "name": "",
+  "version": "",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-cache": "^1.0.2",
+    "gulp-image-resize": "^0.13.0",
+    "gulp-imagemin": "^4.1.0",
+    "gulp.spritesmith": "^6.9.0",
+    "imagemin-pngquant": "^6.0.0"
+  },
+  "dependencies": {
+    "gulp-images-resizer": "0.0.5",
+    "imagemin-jpeg-recompress": "^5.1.0"
+  }
+}
