@@ -1,4 +1,4 @@
-# Imgrinder 0.7
+# Imgrinder 0.8
 This is a simple tool based on Gulp task runner.
 What can it do:
 - optimize all pngs, jpegs, whatever with one "gulp images" command;
