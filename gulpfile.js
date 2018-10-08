@@ -5,6 +5,7 @@ let pngquant = require('imagemin-pngquant');
 let cache = require('gulp-cache');
 let spritesmith = require('gulp.spritesmith');
 let resizer = require('gulp-images-resizer');
+let cheerio = require('gulp-cheerio');
 
 // **** Control panel **** //
 
@@ -61,4 +62,23 @@ gulp.task('resize', function() {
             height: height
         }))
         .pipe(gulp.dest('dist/resized'));
+});
+
+gulp.task('links', function() {
+    return gulp
+        .src(['app/html/*.html'])
+        .pipe(cheerio(function($, file) {
+            // Each file will be run through cheerio and each corresponding `$` will be passed here.
+            // `file` is the gulp file object
+            // Make all h1 tags uppercase
+            $('a').each(function() {
+                var a = $(this);
+                this.attribs.href = "";
+            });
+            $('script').each(function() {
+                if (this.attribs.src)
+                    console.log(this.attribs.src);
+            });
+        }))
+        .pipe(gulp.dest('dist/html'));
 });
