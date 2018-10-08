@@ -15,6 +15,7 @@ let padding = 30,
 
 // **** ************* **** //
 
+
 // Images optimization and copy in /dist
 gulp.task('images', function() {
     return gulp.src('app/img/*')
@@ -68,16 +69,25 @@ gulp.task('links', function() {
     return gulp
         .src(['app/html/*.html'])
         .pipe(cheerio(function($, file) {
-            // Each file will be run through cheerio and each corresponding `$` will be passed here.
-            // `file` is the gulp file object
-            // Make all h1 tags uppercase
+
             $('a').each(function() {
-                var a = $(this);
                 this.attribs.href = "";
             });
+            
             $('script').each(function() {
-                if (this.attribs.src)
-                    console.log(this.attribs.src);
+              let reg = /[^\/]*(\.js|\.css)$/g;
+                if(this.attribs.src) {
+                  let clean = this.attribs.src.match(reg)[0];
+                  this.attribs.src = 'js/' + clean;
+                }
+            });
+            
+            $('link').each(function() {
+              let reg = /[^\/]*(\.js|\.css)$/g;
+                if(this.attribs.href) {
+                  let clean = this.attribs.href.match(reg)[0];
+                  this.attribs.href = 'css/' + clean;
+                }
             });
         }))
         .pipe(gulp.dest('dist/html'));
