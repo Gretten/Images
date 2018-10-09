@@ -75,18 +75,24 @@ gulp.task('links', function() {
             });
             
             $('script').each(function() {
-              let reg = /[^\/]*(\.js|\.css)$/g;
-                if(this.attribs.src) {
-                  let clean = this.attribs.src.match(reg)[0];
+              let reg = /[^\/]*(\.js|\.css)/gi;
+              let attr = this.attribs.src;
+                if(attr && ~attr.indexOf('js')) {
+                  let clean = attr.match(reg)[0];
                   this.attribs.src = 'js/' + clean;
+                } else {
+                  console.log('Ошибка в ' + attr);
                 }
             });
-            
+
             $('link').each(function() {
-              let reg = /[^\/]*(\.js|\.css)$/g;
-                if(this.attribs.href) {
-                  let clean = this.attribs.href.match(reg)[0];
+              let reg = /[^\/]*(\.js|\.css)/gi;
+              let attr = this.attribs.href;
+                if(attr && ~attr.indexOf('css')) {
+                  let clean = attr.match(reg)[0];
                   this.attribs.href = 'css/' + clean;
+                } else {
+                  console.log('Ошибка в ' + attr);
                 }
             });
         }))
