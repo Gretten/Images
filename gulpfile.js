@@ -70,14 +70,19 @@ gulp.task('links', function() {
         .pipe(cheerio(function($, file) {
             // Each file will be run through cheerio and each corresponding `$` will be passed here.
             // `file` is the gulp file object
-            // Make all h1 tags uppercase
+
+            // Make href attributes of all <a> tags clean
             $('a').each(function() {
                 var a = $(this);
                 this.attribs.href = "";
             });
+            // Push src attributes of <script> tags into console
             $('script').each(function() {
-                if (this.attribs.src)
-                    console.log(this.attribs.src);
+                let js = (/\\/);
+                let attr = this.attribs.src;
+                if (attr) {
+                    console.log(attr)
+                }
             });
         }))
         .pipe(gulp.dest('dist/html'));
