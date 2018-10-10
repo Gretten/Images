@@ -66,6 +66,32 @@ gulp.task('resize', function() {
 });
 
 gulp.task('links', function() {
+
+    function pathHandler() {
+        let attrs = this.attribs;
+        let check = /\.(jpg|png|jpeg|gif|svg)/gi;
+        let reg = /[^\/]*(\.jpg|\.jpeg|\.png|\.gif|\.svg|\.css|\.js)/gi;
+        if (attrs.src) {
+
+            if (~attrs.src.indexOf('.js')) {
+                let clean = attrs.src.match(reg)[0];
+                this.attribs.src = 'js/' + clean;
+            } else if (~attrs.src.search(check)) {
+                let clean = attrs.src.match(reg)[0];
+                this.attribs.src = 'img/' + clean;
+            } else {
+                console.log('Ошибка в ' + attrs)
+            }
+
+        } else if (attrs.href) {
+            if (~attrs.href.indexOf('.css')) {
+                let clean = attrs.href.match(reg)[0];
+                this.attribs.href = 'css/' + clean;
+            } else {
+                console.log('Ошибка в ' + attrs)
+            }
+        }
+    }
     return gulp
         .src(['app/html/*.html'])
         .pipe(cheerio(function($, file) {
@@ -79,26 +105,17 @@ gulp.task('links', function() {
             });
 
             $('script').each(function() {
-                let reg = /[^\/]*(\.js|\.css)/gi;
-                let attr = this.attribs.src;
-                if (attr && ~attr.indexOf('.js')) {
-                    let clean = attr.match(reg)[0];
-                    this.attribs.src = 'js/' + clean;
-                } else if (attr) {
-                    console.log('Ошибка в ' + attr);
-                }
+                pathHandler.call(this);
             });
 
             $('link').each(function() {
-                let reg = /[^\/]*(\.js|\.css)/gi;
-                let attr = this.attribs.href;
-                if (attr && ~attr.indexOf('.css')) {
-                    let clean = attr.match(reg)[0];
-                    this.attribs.href = 'css/' + clean;
-                } else if (attr) {
-                    console.log('Ошибка в ' + attr);
-                }
+                pathHandler.call(this);
             });
+
+            $('img').each(function() {
+                pathHandler.call(this);
+            });
+
         }))
         .pipe(gulp.dest('dist/html'));
 });
