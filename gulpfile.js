@@ -15,9 +15,10 @@ let padding = 30,
 
 // **** ************* **** //
 
+
 // Images optimization and copy in /dist
 gulp.task('images', function() {
-    return gulp.src('app/img/*')
+    return gulp.src('app/img/*.*')
         .pipe(cache(imagemin([
             imagemin.gifsicle({ interlaced: true }),
             imagemin.jpegtran({ progressive: true }),
@@ -72,16 +73,25 @@ gulp.task('links', function() {
             // `file` is the gulp file object
 
             // Make href attributes of all <a> tags clean
+
             $('a').each(function() {
-                var a = $(this);
                 this.attribs.href = "";
             });
-            // Push src attributes of <script> tags into console
+
             $('script').each(function() {
-                let js = (/\\/);
-                let attr = this.attribs.src;
-                if (attr) {
-                    console.log(attr)
+                let reg = /[^\/]*(\.js|\.css)$/g;
+                if (this.attribs.src) {
+                    let clean = this.attribs.src.match(reg)[0];
+                    this.attribs.src = 'js/' + clean;
+                }
+            });
+
+            $('link').each(function() {
+                let reg = /[^\/]*(\.js|\.css)$/g;
+                if (this.attribs.href) {
+                    let clean = this.attribs.href.match(reg)[0];
+                    this.attribs.href = 'css/' + clean;
+
                 }
             });
         }))
