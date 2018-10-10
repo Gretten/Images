@@ -79,39 +79,24 @@ gulp.task('links', function() {
             });
 
             $('script').each(function() {
-<<<<<<< HEAD
-                let reg = /[^\/]*(\.js|\.css)$/g;
-                if (this.attribs.src) {
-                    let clean = this.attribs.src.match(reg)[0];
+                let reg = /[^\/]*(\.js|\.css)/gi;
+                let attr = this.attribs.src;
+                if (attr && ~attr.indexOf('.js')) {
+                    let clean = attr.match(reg)[0];
                     this.attribs.src = 'js/' + clean;
-=======
-              let reg = /[^\/]*(\.js|\.css)/gi;
-              let attr = this.attribs.src;
-                if(attr && ~attr.indexOf('js')) {
-                  let clean = attr.match(reg)[0];
-                  this.attribs.src = 'js/' + clean;
-                } else {
-                  console.log('Ошибка в ' + attr);
->>>>>>> 09b697812a3d02778ff25b9ad1f528712012204c
+                } else if (attr) {
+                    console.log('Ошибка в ' + attr);
                 }
             });
 
             $('link').each(function() {
-<<<<<<< HEAD
-                let reg = /[^\/]*(\.js|\.css)$/g;
-                if (this.attribs.href) {
-                    let clean = this.attribs.href.match(reg)[0];
+                let reg = /[^\/]*(\.js|\.css)/gi;
+                let attr = this.attribs.href;
+                if (attr && ~attr.indexOf('.css')) {
+                    let clean = attr.match(reg)[0];
                     this.attribs.href = 'css/' + clean;
-
-=======
-              let reg = /[^\/]*(\.js|\.css)/gi;
-              let attr = this.attribs.href;
-                if(attr && ~attr.indexOf('css')) {
-                  let clean = attr.match(reg)[0];
-                  this.attribs.href = 'css/' + clean;
-                } else {
-                  console.log('Ошибка в ' + attr);
->>>>>>> 09b697812a3d02778ff25b9ad1f528712012204c
+                } else if (attr) {
+                    console.log('Ошибка в ' + attr);
                 }
             });
         }))
