@@ -81,7 +81,7 @@ gulp.task('links', function() {
                   let clean = attr.match(reg)[0];
                   this.attribs.src = 'js/' + clean;
                 } else {
-                  console.log('Ошибка в ' + attr);
+                  console.log('Неверный формат: ' + attr);
                 }
             });
 
@@ -92,7 +92,7 @@ gulp.task('links', function() {
                   let clean = attr.match(reg)[0];
                   this.attribs.href = 'css/' + clean;
                 } else {
-                  console.log('Ошибка в ' + attr);
+                  console.log('Неверный формат: ' + attr);
                 }
             });
         }))
