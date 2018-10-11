@@ -6,7 +6,7 @@ let cache = require('gulp-cache');
 let spritesmith = require('gulp.spritesmith');
 let resizer = require('gulp-images-resizer');
 let cheerio = require('gulp-cheerio');
-
+var entities = require('gulp-html-entities');
 // **** Control panel **** //
 
 let padding = 30,
@@ -18,7 +18,7 @@ let padding = 30,
 
 // Images optimization and copy in /dist
 gulp.task('images', function() {
-    return gulp.src('app/img/*')
+    return gulp.src('app/img/*.*')
         .pipe(cache(imagemin([
             imagemin.gifsicle({ interlaced: true }),
             imagemin.jpegtran({ progressive: true }),
@@ -65,36 +65,131 @@ gulp.task('resize', function() {
         .pipe(gulp.dest('dist/resized'));
 });
 
-gulp.task('links', function() {
+function pathHandler() {
+    let attrs = this.attribs;
+    let check = /\.(jpg|png|jpeg|gif|svg)/gi;
+    let reg = /[^\/]*(\.jpg|\.jpeg|\.png|\.gif|\.svg|\.css|\.js)/gi;
+    if (attrs.src) {
+
+        if (~attrs.src.indexOf('.js')) {
+            let clean = attrs.src.match(reg)[0];
+            this.attribs.src = 'js/' + clean;
+        } else if (~attrs.src.search(check)) {
+            let clean = attrs.src.match(reg)[0];
+            this.attribs.src = 'img/' + clean;
+        } else {
+            console.log('Ошибка в ' + attrs.src)
+        }
+
+    } else if (attrs.href) {
+        if (~attrs.href.indexOf('.css')) {
+            let clean = attrs.href.match(reg)[0];
+            this.attribs.href = 'css/' + clean;
+        } else {
+            console.log('Ошибка в ' + attrs.href)
+        }
+    }
+}
+
+gulp.task('a', () => {
     return gulp
         .src(['app/html/*.html'])
-        .pipe(cheerio(function($, file) {
-
+        .pipe(cheerio(function($) {
             $('a').each(function() {
                 this.attribs.href = "";
             });
-            
-            $('script').each(function() {
-              let reg = /[^\/]*(\.js|\.css)/gi;
-              let attr = this.attribs.src;
-                if(attr && ~attr.indexOf('js')) {
-                  let clean = attr.match(reg)[0];
-                  this.attribs.src = 'js/' + clean;
-                } else {
-                  console.log('Неверный формат: ' + attr);
-                }
-            });
-
-            $('link').each(function() {
-              let reg = /[^\/]*(\.js|\.css)/gi;
-              let attr = this.attribs.href;
-                if(attr && ~attr.indexOf('css')) {
-                  let clean = attr.match(reg)[0];
-                  this.attribs.href = 'css/' + clean;
-                } else {
-                  console.log('Неверный формат: ' + attr);
-                }
-            });
         }))
+        .pipe(entities('decode'))
         .pipe(gulp.dest('dist/html'));
 });
+
+gulp.task('css', () => {
+    return gulp
+        .src(['app/html/*.html'])
+        .pipe(cheerio(function($) {
+            $('link').each(function() {
+                pathHandler.call(this);
+            });
+        }))
+        .pipe(entities('decode'))
+        .pipe(gulp.dest('dist/html'));
+});
+
+gulp.task('script', () => {
+    return gulp
+        .src(['app/html/*.html'])
+        .pipe(cheerio(function($) {
+            $('script').each(function() {
+                pathHandler.call(this);
+            });
+        }))
+        .pipe(entities('decode'))
+        .pipe(gulp.dest('dist/html'));
+});
+
+gulp.task('img', () => {
+    return gulp
+        .src(['app/html/*.html'])
+        .pipe(cheerio(function($) {
+            $('img').each(function() {
+               pathHandler.call(this);
+            });
+        }))
+        .pipe(entities('decode'))
+        .pipe(gulp.dest('dist/html'));
+});
+
+gulp.task('links', () => {
+    return gulp
+    .src(['app/html/*.html'])
+        .pipe(cheerio(function($) {
+            $('img').each(function() {
+               pathHandler.call(this);
+            });
+            $('script').each(function() {
+                pathHandler.call(this);
+             });
+             $('link').each(function() {
+                pathHandler.call(this);
+             });
+             $('a').each(function() {
+                this.attribs.href = "";
+             });
+        }))
+        .pipe(entities('decode'))
+        .pipe(gulp.dest('dist/html'));
+});
+
+gulp.task('all', ['a', 'img'], () => {
+    console.log('Done');
+})
+
+// gulp.task('links', function() {
+
+//     return gulp
+//         .src(['app/html/*.html'])
+//         .pipe(cheerio(function($, file) {
+//             // Each file will be run through cheerio and each corresponding `$` will be passed here.
+//             // `file` is the gulp file object
+
+//             // Make href attributes of all <a> tags clean
+
+//             $('a').each(function() {
+//                 this.attribs.href = "";
+//             });
+
+//             $('script').each(function() {
+//                 pathHandler.call(this);
+//             });
+
+//             $('link').each(function() {
+//                 pathHandler.call(this);
+//             });
+
+//             $('img').each(function() {
+//                 pathHandler.call(this);
+//             });
+//         }))
+
+//         .pipe(gulp.dest('dist/html'));
+// });
