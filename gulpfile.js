@@ -103,6 +103,18 @@ gulp.task('a', () => {
         .pipe(gulp.dest('dist/html'));
 });
 
+gulp.task('form', () => {
+    return gulp
+        .src(['app/html/*.html'])
+        .pipe(cheerio(function($) {
+            $('form').each(function() {
+                this.attribs.action = "";
+            });
+        }))
+        .pipe(entities('decode'))
+        .pipe(gulp.dest('dist/html'));
+});
+
 gulp.task('css', () => {
     return gulp
         .src(['app/html/*.html'])
@@ -132,7 +144,7 @@ gulp.task('img', () => {
         .src(['app/html/*.html'])
         .pipe(cheerio(function($) {
             $('img').each(function() {
-               pathHandler.call(this);
+                pathHandler.call(this);
             });
         }))
         .pipe(entities('decode'))
@@ -141,20 +153,23 @@ gulp.task('img', () => {
 
 gulp.task('links', () => {
     return gulp
-    .src(['app/html/*.html'])
+        .src(['app/html/*.html'])
         .pipe(cheerio(function($) {
             $('img').each(function() {
-               pathHandler.call(this);
+                pathHandler.call(this);
             });
             $('script').each(function() {
                 pathHandler.call(this);
-             });
-             $('link').each(function() {
+            });
+            $('link').each(function() {
                 pathHandler.call(this);
-             });
-             $('a').each(function() {
+            });
+            $('a').each(function() {
                 this.attribs.href = "";
-             });
+            });
+            $('form').each(function() {
+                this.attribs.action = "";
+            });
         }))
         .pipe(entities('decode'))
         .pipe(gulp.dest('dist/html'));
@@ -164,32 +179,6 @@ gulp.task('all', ['a', 'img'], () => {
     console.log('Done');
 })
 
-// gulp.task('links', function() {
 
-//     return gulp
-//         .src(['app/html/*.html'])
-//         .pipe(cheerio(function($, file) {
-//             // Each file will be run through cheerio and each corresponding `$` will be passed here.
-//             // `file` is the gulp file object
-
-//             // Make href attributes of all <a> tags clean
-
-//             $('a').each(function() {
-//                 this.attribs.href = "";
-//             });
-
-//             $('script').each(function() {
-//                 pathHandler.call(this);
-//             });
-
-//             $('link').each(function() {
-//                 pathHandler.call(this);
-//             });
-
-//             $('img').each(function() {
-//                 pathHandler.call(this);
-//             });
-//         }))
-
-//         .pipe(gulp.dest('dist/html'));
-// });
+// Each file will be run through cheerio and each corresponding `$` will be passed here.
+// `file` is the gulp file object
