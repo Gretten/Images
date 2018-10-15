@@ -29,6 +29,7 @@ What can it do:
 3. Open gulpfile.js and change variables in its Control panel section;
 4. Enjoy!
 
+
 1. Склонируйте в папку
 2. Установите модули через "npm install"
 3. Укажите желаемые настройки в gulpfile, секция "Control panel"
