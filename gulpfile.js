@@ -6,14 +6,14 @@ let cache = require('gulp-cache');
 let spritesmith = require('gulp.spritesmith');
 let resizer = require('gulp-images-resizer');
 let cheerio = require('gulp-cheerio');
-var entities = require('gulp-html-entities');
-// **** Control panel **** //
+let entities = require('gulp-html-entities');
+let clean = require('gulp-clean');
+
 
 let padding = 30,
-    width = 50,
-    height = 50
+    width   = 50,
+    height  = 50
 
-// **** ************* **** //
 
 
 // Images optimization and copy in /dist
@@ -41,6 +41,13 @@ gulp.task('images', function() {
 gulp.task('clear', function(done) {
     return cache.clearAll(done);
 });
+
+// Clearing /dist folder
+gulp.task('cleand', function() {
+    return gulp.src('dist/*', {read: false})
+        .pipe(clean());
+});
+
 
 // Options: https://github.com/twolfson/gulp.spritesmith
 gulp.task('sprite', () => {
