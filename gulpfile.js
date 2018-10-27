@@ -1,19 +1,21 @@
-let gulp = require('gulp');
-let imagemin = require('gulp-imagemin');
-let imageminJpegRecompress = require('imagemin-jpeg-recompress');
-let pngquant = require('imagemin-pngquant');
-let cache = require('gulp-cache');
-let spritesmith = require('gulp.spritesmith');
-let resizer = require('gulp-images-resizer');
-let cheerio = require('gulp-cheerio');
-let entities = require('gulp-html-entities');
-let clean = require('gulp-clean');
+let gulp                    = require('gulp');
+let imagemin                = require('gulp-imagemin');
+let imageminJpegRecompress  = require('imagemin-jpeg-recompress');
+let pngquant                = require('imagemin-pngquant');
+let cache                   = require('gulp-cache');
+let spritesmith             = require('gulp.spritesmith');
+let resizer                 = require('gulp-images-resizer');
+let cheerio                 = require('gulp-cheerio');
+let entities                = require('gulp-html-entities');
+let clean                   = require('gulp-clean');
+let flatten                 = require('gulp-flatten');
+let es                      = require('event-stream');
 
 
-let padding = 30,
-    width   = 50,
-    height  = 50
 
+let padding = 30, // sprite paddings
+    width   = 50, // resized images width
+    height  = 50; // resizen images height
 
 
 // Images optimization and copy in /dist
@@ -36,18 +38,6 @@ gulp.task('images', function() {
         })))
         .pipe(gulp.dest('dist/images'));
 });
-
-// Clearing the cache
-gulp.task('clear', function(done) {
-    return cache.clearAll(done);
-});
-
-// Clearing /dist folder
-gulp.task('cleand', function() {
-    return gulp.src('dist/*', {read: false})
-        .pipe(clean());
-});
-
 
 // Options: https://github.com/twolfson/gulp.spritesmith
 gulp.task('sprite', () => {
@@ -186,6 +176,63 @@ gulp.task('all', ['a', 'img'], () => {
     console.log('Done');
 })
 
-
 // Each file will be run through cheerio and each corresponding `$` will be passed here.
 // `file` is the gulp file object
+
+
+// Clearing the cache
+gulp.task('clear', done => {
+    return cache.clearAll(done);
+});
+
+// Clearing /dist folder
+gulp.task('cleand', () => {
+    return gulp.src('dist/*', {read: false})
+        .pipe(clean());
+});
+
+// Move files into standart project folders
+
+gulp.task('rebuild', () => {
+
+    let paths = {
+        input: 'app/proj/**/*',
+        output: 'dist/',
+        files: {
+            css: this.output + 'css',
+            js: this.output + 'js',
+            img: this.output + 'img',
+            other: this.output + 'other'
+        }
+    };
+
+    let toJs = paths.input + '.js';
+    let toCss = paths.input + '.css';
+    let toImg = [
+        paths.input + '.png',
+        paths.input + '.jpeg',
+        paths.input + '.jpg',
+        paths.input + '.svg',
+        paths.input + '.ico',
+        paths.input + '.gif'
+    ];
+    let toAnother = paths.input + ['.odf', '.ttf', '.html'];
+
+    let images = gulp.src(toImg)
+        .pipe(flatten())
+        .pipe(gulp.dest(paths.files.img));
+
+    let js = gulp.src(toJs)
+        .pipe(flatten())
+        .pipe(gulp.dest(paths.files.js));
+
+    let css = gulp.src(toCss)
+        .pipe(flatten())
+        .pipe(gulp.dest(paths.files.css));
+    
+    let other = gulp.src(toAnother)
+        .pipe(flatten())
+        .pipe(gulp.dest(paths.files.other));
+
+    return es.concat(images, js, css, other);
+});
