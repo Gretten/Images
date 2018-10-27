@@ -192,7 +192,10 @@ gulp.task('cleand', () => {
 });
 
 // Move files into standart project folders
-
+/* TODO: 
+    1. "toAnother" variable must represent the principle: "all except JS, CSS and IMG's"
+    2. There must be a function that includes all repeating operations like .pipe(flatten())
+*/
 gulp.task('rebuild', () => {
 
     let path = 'app/proj/**/*';
