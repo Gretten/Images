@@ -175,7 +175,7 @@ gulp.task('links', () => {
 });
 
 // Trash comments removing
-gulp.task('com', function () {
+gulp.task('comments', function () {
     return gulp.src('app/html/*.html')
       .pipe(strip({safe: true}))
       .pipe(cheerio(function($) {
