@@ -10,6 +10,7 @@ let entities                = require('gulp-html-entities');
 let clean                   = require('gulp-clean');
 let flatten                 = require('gulp-flatten');
 let es                      = require('event-stream');
+let strip                   = require('gulp-strip-comments');
 
 
 
@@ -147,6 +148,7 @@ gulp.task('img', () => {
         .pipe(entities('decode'))
         .pipe(gulp.dest('dist/html'));
 });
+  
 
 gulp.task('links', () => {
     return gulp
@@ -172,9 +174,22 @@ gulp.task('links', () => {
         .pipe(gulp.dest('dist/html'));
 });
 
-gulp.task('all', ['a', 'img'], () => {
-    console.log('Done');
-})
+// Trash comments removing
+gulp.task('com', function () {
+    return gulp.src('app/html/*.html')
+      .pipe(strip({safe: true}))
+      .pipe(cheerio(function($) {
+        $('meta').each(function() {
+            if(this.parent.name === 'html' && 
+               this.parent.children[1].name === 'meta') {
+               this.parent.children[1] = ''
+            } else if(!this.parent.children[1].name === 'meta') {
+                console.log('Ошибка в инструкции "comments"');
+            }
+        })}))
+      .pipe(entities('decode'))
+      .pipe(gulp.dest('dist/html'))
+});
 
 // Each file will be run through cheerio and each corresponding `$` will be passed here.
 // `file` is the gulp file object
