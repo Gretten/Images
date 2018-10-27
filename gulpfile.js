@@ -195,44 +195,39 @@ gulp.task('cleand', () => {
 
 gulp.task('rebuild', () => {
 
-    let paths = {
-        input: 'app/proj/**/*',
-        output: 'dist/',
-        files: {
-            css: this.output + 'css',
-            js: this.output + 'js',
-            img: this.output + 'img',
-            other: this.output + 'other'
-        }
-    };
+    let path = 'app/proj/**/*';
 
-    let toJs = paths.input + '.js';
-    let toCss = paths.input + '.css';
+    let toJs = path + '.js';
+    let toCss = path + '.css';
     let toImg = [
-        paths.input + '.png',
-        paths.input + '.jpeg',
-        paths.input + '.jpg',
-        paths.input + '.svg',
-        paths.input + '.ico',
-        paths.input + '.gif'
+        path + '.png',
+        path + '.jpeg',
+        path + '.jpg',
+        path + '.svg',
+        path + '.ico',
+        path + '.gif'
     ];
-    let toAnother = paths.input + ['.odf', '.ttf', '.html'];
+    let toAnother = [
+        path + '.otf', 
+        path + '.ttf', 
+        path + '.html'
+    ];
 
     let images = gulp.src(toImg)
         .pipe(flatten())
-        .pipe(gulp.dest(paths.files.img));
+        .pipe(gulp.dest('dist/img'));
 
     let js = gulp.src(toJs)
         .pipe(flatten())
-        .pipe(gulp.dest(paths.files.js));
+        .pipe(gulp.dest('dist/js'));
 
     let css = gulp.src(toCss)
         .pipe(flatten())
-        .pipe(gulp.dest(paths.files.css));
+        .pipe(gulp.dest('dist/css'));
     
     let other = gulp.src(toAnother)
         .pipe(flatten())
-        .pipe(gulp.dest(paths.files.other));
+        .pipe(gulp.dest('dist/other'));
 
     return es.concat(images, js, css, other);
 });
