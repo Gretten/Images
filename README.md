@@ -4,7 +4,7 @@ What can it do:
 - optimize all pngs, jpegs, whatever with one "gulp images" command;
 - images size changing ("gulp resize");
 - creating of sprites without any external services;
-- clean HTML elements from old attribute values;
+- clean HTML elements from old attribute values and trash comments;
 - generate project file structure and move files from unordered catalog into it;
 - to be continued :)
 
@@ -21,6 +21,7 @@ What can it do:
   - link
   - img
   - css
+- Удаляет ненужные комментарии
  
   
 
