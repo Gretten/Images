@@ -1,8 +1,8 @@
 # Images 0.7
 This is a simple tool based on Gulp task runner.
 What can it do:
-- optimize all pngs, jpegs, whatever with one "gulp images" command;
-- images size changing ("gulp resize");
+- optimize all pngs, jpegs, whatever with one command;
+- images size changing;
 - creating of sprites without any external services;
 - clean HTML elements from old attribute values and trash comments;
 - generate project file structure and move files from unordered catalog into it;
@@ -10,7 +10,7 @@ What can it do:
 
 Эта программа - швейцарский нож для системной интеграции. В сущности, сборка на Gulp.
 Что она делает:
-- Оптимизирует все типы изображений одной командой (gulp images);
+- Оптимизирует все типы изображений одной командой;
 - Пакетно меняет размеры изображений;
 - Генерирует спрайты - одной командой, без внешних сервисов;
 - Генерирует структуру проекта и раскидывает по ней файлы из неупорядоченного каталога;
